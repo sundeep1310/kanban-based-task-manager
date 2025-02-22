@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kanban Board Application
+
+A modern, responsive Kanban board built with Next.js, featuring drag-and-drop task management, dark mode support, and real-time filtering capabilities.
+
+## Features
+
+- **Drag and Drop**: Intuitive task management across different status columns
+- **Dark Mode**: Full dark mode support with system preference detection
+- **Priority Filtering**: Filter tasks by priority (High, Medium, Low)
+- **Responsive Design**: Works on desktop and mobile devices
+- **Real-time Updates**: Instant UI updates when moving or modifying tasks
+- **Task Management**: Add, edit, and delete tasks with ease
+
+## Tech Stack
+
+- **Frontend**: Next.js 14 with TypeScript
+- **State Management**: Redux Toolkit
+- **Styling**: Tailwind CSS with shadcn/ui components
+- **Drag and Drop**: dnd-kit
+- **Data Fetching**: TanStack Query (React Query)
+- **Theme**: next-themes for dark mode support
 
 ## Getting Started
 
-First, run the development server:
-
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone [repository-url]
+cd kanban-board
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Install shadcn/ui components:
+```bash
+npx shadcn-ui@latest init
+npx shadcn-ui@latest add button
+npx shadcn-ui@latest add dialog
+npx shadcn-ui@latest add input
+npx shadcn-ui@latest add label
+npx shadcn-ui@latest add select
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Run the development server:
+```bash
+npm run dev
+```
 
-## Learn More
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── app/
+│   ├── layout.tsx
+│   ├── page.tsx
+│   └── globals.css
+├── components/
+│   ├── ui/
+│   │   ├── board.tsx
+│   │   ├── column.tsx
+│   │   ├── task-card.tsx
+│   │   └── task-modal.tsx
+│   ├── add-task-dialog.tsx
+│   ├── theme-toggle.tsx
+│   └── providers.tsx
+├── lib/
+│   ├── store/
+│   │   ├── store.ts
+│   │   └── taskSlice.ts
+│   └── utils.ts
+└── types/
+    └── index.ts
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Key Features Explained
 
-## Deploy on Vercel
+### Task Management
+- Create new tasks with title, priority, due date, and assignee
+- Edit task details through a modal interface
+- Delete tasks with a confirmation dialog
+- Drag and drop tasks between status columns
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Filtering
+- Filter tasks by priority level
+- Clear filters to view all tasks
+- Real-time filtering without page reload
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Theme Support
+- Light and dark mode support
+- System preference detection
+- Persistent theme selection
+
+### Responsive Design
+- Mobile-friendly interface
+- Horizontal scrolling for columns on smaller screens
+- Touch support for drag and drop
