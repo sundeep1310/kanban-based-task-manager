@@ -1,3 +1,4 @@
+// taskSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Task } from '@/types';
 
@@ -25,14 +26,16 @@ export const taskSlice = createSlice({
     addTask: (state, action: PayloadAction<Task>) => {
       state.tasks.push(action.payload);
     },
+    deleteTask: (state, action: PayloadAction<string>) => {
+      console.log('Deleting task with ID:', action.payload); // Debug log
+      state.tasks = state.tasks.filter(task => task.id !== action.payload);
+      console.log('Remaining tasks:', state.tasks.length); // Debug log
+    },
     updateTask: (state, action: PayloadAction<Task>) => {
       const index = state.tasks.findIndex(task => task.id === action.payload.id);
       if (index !== -1) {
         state.tasks[index] = action.payload;
       }
-    },
-    deleteTask: (state, action: PayloadAction<string>) => {
-      state.tasks = state.tasks.filter(task => task.id !== action.payload);
     },
     setPriorityFilter: (state, action: PayloadAction<Task['priority'] | null>) => {
       state.filters.priority = action.payload;
@@ -40,5 +43,5 @@ export const taskSlice = createSlice({
   },
 });
 
-export const { setTasks, addTask, updateTask, deleteTask, setPriorityFilter } = taskSlice.actions;
+export const { setTasks, addTask, deleteTask, updateTask, setPriorityFilter } = taskSlice.actions;
 export default taskSlice.reducer;

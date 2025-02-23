@@ -3,12 +3,11 @@
 import { useState } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { Task } from '@/types';
-import { Trash2 } from 'lucide-react';
+import { Trash2, GripVertical } from 'lucide-react';
 import { TaskModal } from './task-modal';
 import { cn } from '@/lib/utils';
 import { useDispatch } from 'react-redux';
 import { deleteTask } from '@/lib/store/taskSlice';
-import { Button } from './button';
 
 interface TaskCardProps {
   task: Task;
@@ -18,8 +17,9 @@ export function TaskCard({ task }: TaskCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: task.id,
+    data: task
   });
 
   const style = transform ? {
@@ -32,52 +32,67 @@ export function TaskCard({ task }: TaskCardProps) {
     'low': 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200'
   };
 
-  const handleDelete = (e: React.MouseEvent) => {
+  const onDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    console.log('Delete clicked', task.id);
     dispatch(deleteTask(task.id));
   };
 
   return (
     <>
-      <div
+      <div 
         ref={setNodeRef}
         style={style}
-        {...attributes}
-        {...listeners}
         className={cn(
-          "bg-white dark:bg-card p-4 rounded-lg shadow-sm cursor-move",
+          "bg-white dark:bg-card p-4 rounded-lg shadow-sm",
           "hover:shadow-md transition-all dark:border dark:border-border",
-          isDragging && "opacity-50",
-          "group touch-none"
+          "group touch-none relative"
         )}
-        onClick={() => setIsModalOpen(true)}
       >
-        <div className="flex justify-between items-start">
+        {/* Drag Handle */}
+        <div
+          {...attributes}
+          {...listeners}
+          className="absolute left-2 top-1/2 -translate-y-1/2 cursor-move p-2 hover:bg-gray-100 rounded-md"
+        >
+          <GripVertical className="h-4 w-4 text-gray-500" />
+        </div>
+
+        {/* Delete Button */}
+        <button
+          type="button"
+          onClick={onDeleteClick}
+          className="absolute top-2 right-2 p-2 rounded-md hover:bg-red-100 
+                   dark:hover:bg-red-900/30 transition-colors z-10 cursor-pointer"
+        >
+          <Trash2 className="h-4 w-4 text-red-500" />
+        </button>
+
+        {/* Content Area */}
+        <div 
+          className="pl-8 pr-8" 
+          onClick={() => setIsModalOpen(true)}
+        >
           <h3 className="font-medium text-foreground">{task.title}</h3>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="opacity-0 group-hover:opacity-100 h-6 w-6"
-            onClick={handleDelete}
-          >
-            <Trash2 className="h-4 w-4 text-muted-foreground hover:text-red-500" />
-          </Button>
-        </div>
-        <div className="flex items-center gap-2 mt-2">
-          <span className={cn(
-            "px-2 py-1 rounded text-xs",
-            priorityClasses[task.priority]
-          )}>
-            {task.priority}
-          </span>
-          <span className="text-sm text-muted-foreground">{task.assignee}</span>
-        </div>
-        {task.dueDate && (
-          <div className="text-xs text-muted-foreground mt-2">
-            Due: {new Date(task.dueDate).toLocaleDateString()}
+          
+          <div className="flex items-center gap-2 mt-2">
+            <span className={cn(
+              "px-2 py-1 rounded text-xs",
+              priorityClasses[task.priority]
+            )}>
+              {task.priority}
+            </span>
+            <span className="text-sm text-muted-foreground">{task.assignee}</span>
           </div>
-        )}
+
+          {task.dueDate && (
+            <div className="text-xs text-muted-foreground mt-2">
+              Due: {new Date(task.dueDate).toLocaleDateString()}
+            </div>
+          )}
+        </div>
       </div>
+
       <TaskModal
         task={task}
         open={isModalOpen}

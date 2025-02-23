@@ -31,12 +31,11 @@ export function Board() {
     if (!over) return;
 
     const activeTask = tasks.find(t => t.id === active.id);
-    const newStatus = over.id as Task['status'];
-
-    if (activeTask && activeTask.status !== newStatus) {
+    // Only update if dropping into a different column
+    if (activeTask && activeTask.status !== over.id) {
       dispatch(updateTask({
         ...activeTask,
-        status: newStatus,
+        status: over.id as Task['status'],
       }));
     }
 
@@ -50,20 +49,17 @@ export function Board() {
       collisionDetection={closestCorners}
     >
       <div className="flex gap-4 min-h-[calc(100vh-12rem)] overflow-x-auto pb-8">
-        {columns.map(columnId => {
-          const columnTasks = filteredTasks.filter(task => task.status === columnId);
-          return (
-            <Column
-              key={columnId}
-              id={columnId}
-              title={columnId}
-              tasks={columnTasks}
-            />
-          );
-        })}
+        {columns.map(column => (
+          <Column
+            key={column}
+            id={column}
+            title={column}
+            tasks={filteredTasks.filter(task => task.status === column)}
+          />
+        ))}
       </div>
       <DragOverlay>
-        {activeTask && <TaskCard task={activeTask} />}
+        {activeTask ? <TaskCard task={activeTask} /> : null}
       </DragOverlay>
     </DndContext>
   );
